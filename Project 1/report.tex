@@ -11,12 +11,33 @@
 
 \section{Introduction}
 
-We report on our efforts to use different regression techniques to predict the price of a house given various different parameters. The two techniques that we present in this report is the Least Absolute Shrinkage and Selection Operator (LASSO) and the Random Forest regression algorithm.
+We report on our efforts to use different regression techniques to predict the price of a house in Ames, IA given various different parameters. The two techniques that we present in this report is the Least Absolute Shrinkage and Selection Operator (LASSO) and the Random Forest regression algorithm.
 % Talk more about intro and maybe motivation 
 
-\section{Data Preprocessing}
+\section{Methods}
 
-For this project, we are given a data set made up numerous data points. These include basement area, zoning type, heating type, year built, etc. Our goal is to use these values to predict the price of the corresponding house. Before we can build a model, we must convert non-numerical data into a form that can be used with our regression techniques. To do this, we use a very simple conversion 
+\subsection{Data Preprocessing}
+For this project, we are given a data set made up numerous data points. These
+include numerical data like basement area,  lot size, number of floors, year
+built, as well as categorical data like zoning type, heating type, street type.
+Our goal is to use these values to predict the price of the corresponding house.
+Before we can build a model, we must first clean the data in two steps:
+1) remove missing and low-importance values, and 2) convert non-numerical data
+into a form that can be used with our regression techniques. Our data cleaning
+approach, we removed the following columns of data:
+PID, Garage\_Yr\_Blt, Street, Utilities, Condition\_2, Roof\_Matl, Heating,
+Pool\_QC, Misc\_Feature, Low\_Qual\_Fin\_SF, Pool\_Area, Longitude, Latitude.
+For numeric data stored as strings, we used the \verb,pandas.to_numeric, 
+function to convert the data into the appropriate numeric datatypes. For
+categorical data, we used the common approach of creating a vector of length
+$n$ with the $i$th entry being 1 and the remaining values being 0, where $n$ is
+the number of different categorical values, and $i$ corresponds a particular
+categorical value.
 
+We used 90\% winsorization on the data to remove extreme values to improve performance.
 
+\subsection{Regression algorithms}
+We used the \verb.Lasso. and \verb.RandomForestRegressor. classes from the
+\verb.sklearn. package to perform our regression
+.
 \end{document}
