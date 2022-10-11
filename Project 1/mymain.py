@@ -1,80 +1,69 @@
+###########################################
+# Step 0: Load necessary libraries
+
 import pandas as pd
-import numpy as np 
+import numpy as np
 from sklearn.linear_model import LinearRegression, Lasso, Ridge
 from sklearn.model_selection import cross_validate, GridSearchCV
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.preprocessing import MinMaxScaler
-import matplotlib.pyplot as plt 
-
-df = pd.read_csv("https://liangfgithub.github.io/Data/Ames_data.csv")
-testID = pd.read_csv(
-    'https://liangfgithub.github.io/Data/project1_testIDs.dat',delim_whitespace=' ',header=None)
-
+import timeit
+import scipy
+import glmnet_python
+from glmnet import glmnet
+from glmnetPredict import glmnetPredict
+from glmnetCoef import glmnetCoef
 
 def numeric_convert(frame):
-    # We may want to normalize data as well 
+    # We may want to normalize data as well
     for col in frame:
         try:
             frame[col] = pd.to_numeric(frame[col])
         except:
-            frame[col] = pd.factorize(frame[col])[0] + 1
-    
+            frame[col] = pd.factorize(frame[col])[0]
     return frame
 
-def get_split(frame, index):
+###########################################
+# Step 1: Preprocess training data
+#         and fit two models
 
-    frame = frame.drop('Garage_Yr_Blt', axis=1)
+bad_cols = ['PID', 'Garage_Yr_Blt', 'Street', 'Utilities', 'Condition_2', 'Roof_Matl', 'Heating', 'Pool_QC', 'Misc_Feature', 'Low_Qual_Fin_SF', 'Pool_Area', 'Longitude','Latitude']
 
-    num_rows = np.arange(len(frame))
+train = pd.read_csv('train.csv', delim_whitespace=' ', header=None)
+train_frame = clean_data(train, bad_cols)
 
-    test_index = testID.iloc[:,index]
-    train_index = np.array([i for i in num_rows if i not in test_index])
+xtrain = numeric_convert(train_frame.iloc[:,:-1])
+for c in xtrain:
+    xtrain[c] = xtrain[c] / np.max(np.abs(x[c]))
 
-    xtest = numeric_convert(frame.iloc[test_index,1:-1].copy())
-    xtrain = numeric_convert(frame.iloc[train_index,1:-1].copy())
+xtrain = xtrain.to_numpy()
+ytrain = np.log(frame.iloc[:,-1]).to_numpy()
 
-    # convert to log to get better model
-    ytest = np.log(frame.iloc[test_index,-1].copy())
-    ytrain = np.log(frame.iloc[train_index,-1].copy())
+# LR model
+lr_model = glmnet(x=xtrain, y=ytrain, family = 'gaussian')
 
-    return xtrain,xtest,ytrain,ytest
-
-
-def clean_data(df, cols):
-    for col in cols:
-        df = df.drop(col, axis=1)
-    return df
-
-
-bad_cols = ['PID', 'Garage_Yr_Blt']
-# Set up data for use with scikit-learn
-frame = clean_data(df, bad_cols)
-cvsplits = []
-num_rows = np.arange(len(frame))
-for index in range(0,10):
-    test_index = testID.iloc[:,index]
-    train_index = np.array([i for i in num_rows if i not in test_index])
-    cvsplits.append((train_index, test_index.values))
+# RF model
+rf_model = RandomForestRegressor(criterion='squared_error')
+rf_model.fit(xtrain, ytrain)
 
 
-scaler = MinMaxScaler()
+###########################################
+# Step 2: Preprocess test data
+#         and output predictions into two files
+#
 
-x = numeric_convert(frame.iloc[:,:-1].copy())
-# x = scaler.fit_transform(x)
-# for c in x:
-#     x[c] = x[c] / np.max(np.abs(x[c]))
-    # x[c] = scaler.fit_transform(x[c])
+test = pd.read_csv('test.csv', delim_whitespace=' ', header=None)
+test_frame = clean_data(test, bad_cols)
 
-# convert to log to get better model
-y = np.log(frame.iloc[:,-1].copy())
+xtest = numeric_convert(test_frame)
+for c in xtest:
+    xtest[c] = xtest[c] / np.max(np.abs(xtest[c]))
 
-
-split_number = 0
-
-xtrain = x.values[cvsplits[split_number][0]]
-xtest = x.values[cvsplits[split_number][1]]
-
-ytrain = y.values[cvsplits[split_number][0]]
-ytest = y.values[cvsplits[split_number][1]]
+xtest = xtest.to_numpy()
 
 
+lr_yhat = glmnetPredict(lr_model, xtest, s = scipy.float64([0.00018263318833249426])).flatten()
+lr_yhat = np.exp(lr_yhat)
+pd.DataFrame(data={'PID': PID, 'Sale_Price': pd.Series(lr_yhat, name='Sale_Price')}).to_csv('mysubmission1.txt', index=False)
+
+rf_yhat = np.exp(rf_model.predict(xtest))
+pd.DataFrame(data={'PID': PID, 'Sale_Price': pd.Series(rf_yhat, name='Sale_Price')}).to_csv('mysubmission2.txt', index=False)
