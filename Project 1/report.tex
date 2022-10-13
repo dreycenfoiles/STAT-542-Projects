@@ -20,6 +20,44 @@ For this project, we are given a data set made up numerous data points. These in
 
 \section{Linear Model}
 
+\subsection{Results}
+
+\section{Random Forest}
+
+Our random forest model appeared to work will with a simple factorize command. This is because the random forest model is nonlinear and category values of 1,2,3, etc. are not going to introduce artifacts into the prediction that it would for linear models. We used the Scikit-Learn implementation of the random forest regressor and we found that even with the default parameters, we were able to get the RMSE test error below the benchmark.
+
+\subsection{Results}
+
+
+\begin{center} 
+    \begin{tabular}{ | c |  c |  c |} 
+        \hline
+        Split \# & RMSE & Runtime (sec.) \\ 
+        \hline\hline
+        1 & 0.086 & 2.361 \\ 
+        \hline 
+        2 & 0.087 & 2.328 \\ 
+        \hline 
+        3 & 0.097 & 2.335 \\ 
+        \hline 
+        4 & 0.093 & 2.434 \\ 
+        \hline 
+        5 & 0.090 & 2.451 \\ 
+        \hline 
+        6 & 0.087 & 2.432 \\ 
+        \hline
+         7 & 0.085 & 2.363 \\ 
+         \hline 
+        8 & 0.097 & 2.342 \\ 
+        \hline 
+        9 & 0.092 & 2.435 \\ 
+        \hline
+        10 & 0.088 & 2.422 \\ 
+        \hline 
+    \end{tabular} 
+\end{center}
+
+\section{Conclusion}
 
 
 
