@@ -11,7 +11,7 @@
 
 \section{Introduction}
 
-We report on our efforts to use different regression techniques to predict the price of a house in Ames, IA given various different parameters. The two techniques that we present in this report is the Least Absolute Shrinkage and Selection Operator (LASSO) and the Random Forest regression algorithm.
+We report on our efforts to use different regression techniques to predict the price of a house in Ames, IA given various different parameters. The two techniques that we present in this report is the ridge regression and the gradient boosted regression algorithm.
 % Talk more about intro and maybe motivation 
 
 \section{Methods}
@@ -23,32 +23,78 @@ built, as well as categorical data like zoning type, heating type, street type.
 Our goal is to use these values to predict the price of the corresponding house.
 Before we can build a model, we must first clean the data in two steps:
 1) remove missing and low-importance values, and 2) convert non-numerical data
-into a form that can be used with our regression techniques. Our data cleaning
-approach, we removed the following columns of data:
+into a form that can be used with our regression techniques. 
+
+We used two data cleaning approaches for the linear and tree model. For the linear model 
+we removed the following columns of data:
 PID, Garage\_Yr\_Blt, Street, Utilities, Condition\_2, Roof\_Matl, Heating,
-Pool\_QC, Misc\_Feature, Low\_Qual\_Fin\_SF, Pool\_Area, Longitude, Latitude.
-For numeric data stored as strings, we used the \verb,pandas.to_numeric, 
+Pool\_QC, Misc\_Feature, \\ 
+Low\_Qual\_Fin\_SF, Pool\_Area, Longitude, Latitude. For the 
+tree model we only removed PID because it was not data and Garage\_Yr\_Blt because 
+it contained NaNs. For numeric data stored as strings, we used the \verb,pandas.to_numeric, 
 function to convert the data into the appropriate numeric datatypes. For
 categorical data, we used the common approach of creating a vector of length
 $n$ with the $i$th entry being 1 and the remaining values being 0, where $n$ is
 the number of different categorical values, and $i$ corresponds a particular
-categorical value.
+categorical value. Such a technique is called one-hot-encoding. 
 
-We used 90\% winsorization on the data to remove extreme values to improve performance.
-
-\subsection{Regression algorithms}
-We used the \verb.Lasso. and \verb.RandomForestRegressor. classes from the
-\verb.sklearn. package to perform our regression
-.
-
+We used 95\% winsorization on the data to remove extreme values to improve performance.
+This improves performance because after some threshold value, an increase in a feature's 
+value does not contribute to an increase in a house's price. Therefore, placing a cap on the upper limits of a data set can improve a model's performance significantly. 
 
 \section{Linear Model}
 
+For the linear model, we used a ridge regression. We had initially experimented with a 
+LASSO regression but eventually saw that a ridge regression gave superior performance. 
+We optimized the $\alpha$ for the model by cross validation and we found that an $\alpha$ 
+value of 5 did the best on test sets. However, it is important to note that we were unable 
+to get 2 of the test sets below the set benchmark. Even after doing everything that was 
+recommended, our performance seemed to hit a wall and we are unsure what could be done 
+to improve it. 
+
+Overall, the ridge regression was less flexible than the gradient boosted regressor because we needed to remove several columns before the performance was near the benchmark. On the other hand, ridge regression was orders of magnitude faster than the decision tree so linear models may be worth the lack of flexibility when working with 
+very large data sets. 
+
 \subsection{Results}
 
-\section{Random Forest}
+\begin{center} 
+    \begin{tabular}{ | c |  c |  c |} 
+        \hline
+        Split \# & RMSE & Runtime (sec.) \\ 
+        \hline\hline
+        1 & 0.123 & 0.007 \\ 
+        \hline 
+        2 & 0.114 & 0.007 \\ 
+        \hline 
+        3 & 0.124 & 0.007 \\ 
+        \hline 
+        4 & 0.131 & 0.008\\ 
+        \hline 
+        5 & 0.129 & 0.008 \\ 
+        \hline 
+        6 & 0.123 & 0.009 \\ 
+        \hline
+         7 & 0.114 & 0.009 \\ 
+         \hline 
+        8 & 0.124 & 0.007 \\ 
+        \hline 
+        9 & 0.131 & 0.009 \\ 
+        \hline
+        10 & 0.129 & 0.007 \\ 
+        \hline 
+    \end{tabular} 
+\end{center}
 
-Our random forest model appeared to work will with a simple factorize command. This is because the random forest model is nonlinear and category values of 1,2,3, etc. are not going to introduce artifacts into the prediction that it would for linear models. We used the Scikit-Learn implementation of the random forest regressor and we found that even with the default parameters, we were able to get the RMSE test error below the benchmark.
+\section{Tree-based Model}
+
+For our tree-based model, we used the \verb.GradientBoostingRegressor. from scikit-learn. We first tried random forests but found it was textbf{much} slower than gradient boosting and quite a bit less accurate. We experimented with two main hyper-parameters, the number of decision trees and the max depth of the decision trees. After some experimentation, we found that a max depth of 4, just 1 above the default value, was optimal. On the other hand, the number of decision trees seemed to be optimal around 500. This was significantly higher than the default value. There were still some performance benefits of increasing the number of trees further but they were quickly diminishing and the computational cost of running the model was becoming intractable.
+
+The gradient boosted regressor was much better equipped to handle bad data than ridge 
+regression. We did not need to remove any columns and, in fact, removing columns worsened
+its performance. Therefore, I think we could say that decision trees work better for 
+when you have data and you are not yet sure which features are actually valuable. 
+
+
 
 \subsection{Results}
 
@@ -58,30 +104,32 @@ Our random forest model appeared to work will with a simple factorize command. T
         \hline
         Split \# & RMSE & Runtime (sec.) \\ 
         \hline\hline
-        1 & 0.086 & 2.361 \\ 
+        1 & 0.123 & 10.316 \\ 
         \hline 
-        2 & 0.087 & 2.328 \\ 
+        2 & 0.117 & 10.428 \\ 
         \hline 
-        3 & 0.097 & 2.335 \\ 
+        3 & 0.124 & 10.131 \\ 
         \hline 
-        4 & 0.093 & 2.434 \\ 
+        4 & 0.134 & 10.132\\ 
         \hline 
-        5 & 0.090 & 2.451 \\ 
+        5 & 0.131 & 10.102 \\ 
         \hline 
-        6 & 0.087 & 2.432 \\ 
+        6 & 0.123 & 10.108 \\ 
         \hline
-         7 & 0.085 & 2.363 \\ 
+         7 & 0.117 & 10.131 \\ 
          \hline 
-        8 & 0.097 & 2.342 \\ 
+        8 & 0.121 & 10.133 \\ 
         \hline 
-        9 & 0.092 & 2.435 \\ 
+        9 & 0.129 & 10.141 \\ 
         \hline
-        10 & 0.088 & 2.422 \\ 
+        10 & 0.132 & 10.386 \\ 
         \hline 
     \end{tabular} 
 \end{center}
 
 \section{Conclusion}
+
+The important result we observed was that preprocessing was \textbf{essential} to have good performance. It did not matter what hyper-parameters we used for the two models, if the data was not processed properly, we would get poor results. Tuning the hyper-parameters of the two models would reduce our RMSE by only a small amount compared to the effects of One-hot-encoding and Winsorization. However, even with our preprocessing, we were unable to reach the benchmark for some of the test sets. 
 
 
 
