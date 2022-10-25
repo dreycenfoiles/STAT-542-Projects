@@ -4,7 +4,7 @@
 \usepackage{float}
 \usepackage{amsfonts}
 \title{Project 1 Report}
-\author{Dreycen Foiles, Olek Yardas}
+\author{Dreycen Foiles [dfoiles2], \\ Olek Yardas [yardasol]}
 \date{\today}
 \begin{document}
 \maketitle
@@ -46,13 +46,10 @@ value does not contribute to an increase in a house's price. Therefore, placing 
 For the linear model, we used a ridge regression. We had initially experimented with a 
 LASSO regression but eventually saw that a ridge regression gave superior performance. 
 We optimized the $\alpha$ for the model by cross validation and we found that an $\alpha$ 
-value of 5 did the best on test sets. However, it is important to note that we were unable 
-to get 2 of the test sets below the set benchmark. Even after doing everything that was 
-recommended, our performance seemed to hit a wall and we are unsure what could be done 
-to improve it. 
+value of 2 did the best on test sets. 
 
 Overall, the ridge regression was less flexible than the gradient boosted regressor because we needed to remove several columns before the performance was near the benchmark. On the other hand, ridge regression was orders of magnitude faster than the decision tree so linear models may be worth the lack of flexibility when working with 
-very large data sets. 
+very large data sets. In the end, the ridge regression performed better than the tree-based model, which we found surprising. 
 
 \subsection{Results}
 
@@ -128,7 +125,7 @@ when you have data and you are not yet sure which features are actually valuable
 
 \section{Conclusion}
 
-The important result we observed was that preprocessing was \textbf{essential} to have good performance. It did not matter what hyper-parameters we used for the two models, if the data was not processed properly, we would get poor results. Tuning the hyper-parameters of the two models would reduce our RMSE by only a small amount compared to the effects of One-hot-encoding and Winsorization. However, even with our preprocessing, we were unable to reach the benchmark for some of the test sets. 
+The important result we observed was that preprocessing was \textbf{essential} to have good performance. It did not matter what hyper-parameters we used for the two models, if the data was not processed properly, we would get poor results. Tuning the hyper-parameters of the two models would reduce our RMSE by only a small amount compared to the effects of One-hot-encoding and Winsorization. However, even with our preprocessing, we were unable to reach the benchmark for one of the test sets. 
 
 
 
