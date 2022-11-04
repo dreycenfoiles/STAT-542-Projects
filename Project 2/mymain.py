@@ -19,8 +19,8 @@ def mypredict(train, test, next_fold, t):
 
     tmp_train = pd.get_dummies(tmp_train, columns=['Week','Store','Dept','IsHoliday'])
 
-    start_date = pd.to_datetime("2011-03") + pd.DateOffset(months=2*t)
-    end_date = pd.to_datetime("2011-05") + pd.DateOffset(months=2*t)
+    start_date = pd.to_datetime("2011-03") + pd.DateOffset(months=2*(t-1))
+    end_date = pd.to_datetime("2011-05") + pd.DateOffset(months=2*(t-1))
 
     date_filter = (test['Date'] >= start_date) & (test['Date'] < end_date)
 
