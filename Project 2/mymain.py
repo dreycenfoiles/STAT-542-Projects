@@ -20,9 +20,11 @@ def mypredict(train, test, next_fold, t):
     tmp_train = pd.get_dummies(tmp_train, columns=['Week','Store','Dept','IsHoliday'])
 
     start_date = pd.to_datetime("2011-03") + pd.DateOffset(months=2*t)
-    end_date = pd.to_datetime("2011-04") + pd.DateOffset(months=2*t)
+    end_date = pd.to_datetime("2011-05") + pd.DateOffset(months=2*t)
 
     date_filter = (test['Date'] >= start_date) & (test['Date'] < end_date)
+
+    test_pred = test.copy().loc[date_filter]
 
     tmp_test = test.copy().loc[date_filter].drop(['Date'],axis=1)
     tmp_test['Week'] = pd.to_datetime(test['Date']).dt.isocalendar().week
@@ -38,9 +40,9 @@ def mypredict(train, test, next_fold, t):
     model.fit(xtrain, ytrain)
 
     ypred = model.predict(tmp_test.values)
-    test.loc[date_filter, "Weekly_Pred"] = ypred
+    test_pred.loc[date_filter, "Weekly_Pred"] = ypred
 
-    return train, test
+    return train, test_pred
 
 
 train = pd.read_csv('train_ini.csv', parse_dates=['Date'], index_col=[0])
@@ -66,8 +68,6 @@ for t in range(1, n_folds+1):
     # extract predictions matching up to the current fold
     scoring_df = next_fold.merge(
         test_pred, on=['Date', 'Store', 'Dept'], how='left', suffixes=("", "_dummy"))
-
-    print(scoring_df)
 
     # extract weights and convert to numpy arrays for wae calculation
     weights = scoring_df['IsHoliday'].apply(
