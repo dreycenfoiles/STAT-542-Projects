@@ -6,79 +6,71 @@ from sklearn.linear_model import LinearRegression
 
 def mypredict(train, test, next_fold, t):
 
-    x_cols = ['Year', 'Week', 'Store', 'Dept', 'IsHoliday']
-
-    start_date = pd.to_datetime("2011-03") + pd.DateOffset(months=2*t)
-    end_date = pd.to_datetime("2011-04") + pd.DateOffset(months=2*t)
-
-    date_filter = (test['Date'] >= start_date) & (test['Date'] < end_date)
-
-    current_test = test[x_cols].copy().loc[date_filter]
-
-    #tmp = pd.DataFrame()
-
     if not isinstance(next_fold, type(None)):
         next_fold = next_fold
-        train = pd.concat([train,next_fold])
+        train = pd.concat([train, next_fold])
 
-    #dates = train['Date']
-    #tmp = train.copy()
-    #tmp['Date'] = (dates - dates.min()).dt.days
+    def get_week(date): 
+        
+        if date.isocalendar().year == 2010:
+            return date.isocalendar().week - 1
+        else: 
+            return date.isocalendar().week
 
-    #current_test_dates = current_test['Date']
-    #current_test['Date'] = (current_test_dates - dates.min()).dt.days
+    start_date = pd.to_datetime("2011-03") + pd.DateOffset(months=2*(t-1))
+    end_date = pd.to_datetime("2011-05") + pd.DateOffset(months=2*(t-1))
 
-    xtrain = train[x_cols].values
-    ytrain = train['Weekly_Sales'].values
+    date_filter1 = (test['Date'] >= start_date) & (test['Date'] < end_date)
 
-    model = LinearRegression()
+    test_current = test.copy().loc[date_filter1].drop(columns=['IsHoliday'])
+    start_last_year = np.min(test_current['Date']) - pd.Timedelta(days=375)
+    end_last_year = np.max(test_current['Date']) - pd.Timedelta(days=350)
 
-    model.fit(xtrain, ytrain)
+    date_filter2 = (train['Date'] >= start_last_year) & (
+        train['Date'] < end_last_year)
 
-    ypred = model.predict(current_test.values)
-    test.loc[date_filter, "Weekly_Pred"] = ypred
+    tmp_train = train.copy().loc[date_filter2]
 
-    return train, test
+    tmp_train['Week'] = pd.to_datetime(tmp_train['Date']).apply(get_week)
+    tmp_train = tmp_train.rename(columns={'Weekly_Sales':'Weekly_Pred'})
+    tmp_train = tmp_train.drop(columns=['Date','IsHoliday'])
 
+    test_current['Week'] = pd.to_datetime(test_current['Date']).dt.isocalendar().week
 
-train = pd.read_csv('train_ini.csv', parse_dates=['Date'])
-test = pd.read_csv('test.csv', parse_dates=['Date'])
+    test_pred = test_current.merge(
+        tmp_train, on=['Week', 'Store', 'Dept'], how='left')
 
-n_years = 3
-yrs = pd.to_datetime(train['Date']).dt.to_period('Y').unique().year
-for date in train['Date'].unique():
-    wk = np.zeros(52)
-    yr = np.zeros(n_years)
-    wk_idx = (train.loc[train['Date'] == date]['Week']).unique()[0]
-    yr_idx = (train.loc[train['Date'] == date]['Year']).unique()[0]
-    wk[wk_idx] = 1
-    yr[yr_idx] = 1
-    idx = train.loc[train['Date'] == date].index
-    n = len(idx)
-    s_wk = pd.Series(data=n * [wk], index=idx)
-    s_yr = pd.Series(data=n * [yr], index=idx)
-    # it takes too long to write all the arrays to a file, so
-    # we'll just do that in memeory in the next step
-    train.loc[train['Date']==date,'Week'] = s_wk
-    train.loc[train['Date']==date,'Year'] = s_yr
+    return train, test_pred
 
 
-yrs = pd.to_datetime(test['Date']).dt.to_period('Y').unique().year
-for date in test['Date'].unique():
-    wk = np.zeros(52)
-    yr = np.zeros(n_years)
-    wk_idx = (test.loc[test['Date'] == date]['Week']).unique()[0]
-    yr_idx = (test.loc[test['Date'] == date]['Year']).unique()[0]
-    wk[wk_idx] = 1
-    yr[yr_idx] = 1
-    idx = test.loc[test['Date'] == date].index
-    n = len(idx)
-    s_wk = pd.Series(data=n * [wk], index=idx)
-    s_yr = pd.Series(data=n * [yr], index=idx)
-    # it takes too long to write all the arrays to a file, so
-    # we'll just do that in memeory in the next step
-    test.loc[test['Date']==date,'Week'] = s_wk
-    test.loc[test['Date']==date,'Year'] = s_yr
+# mypredict = function(){
+
+#     start_date < - ymd("2011-03-01") % m+% months(2 * (t - 1))
+#     end_date < - ymd("2011-05-01") % m+% months(2 * (t - 1))
+#     test_current < - test % > %
+#     filter(Date >= start_date & Date < end_date) % > %
+#     select(-IsHoliday)
+
+#     start_last_year = min(test_current$Date) - 375
+#     end_last_year = max(test_current$Date) - 350
+#     tmp_train < - train % > %
+#     filter(Date > start_last_year & Date < end_last_year) % > %
+#     mutate(Wk=ifelse(year(Date) == 2010, week(Date)-1, week(Date))) % > %
+#     rename(Weekly_Pred=Weekly_Sales) % > %
+#     select(-Date, -IsHoliday)
+
+#     test_current < - test_current % > %
+#     mutate(Wk=week(Date))
+
+#     test_pred < - test_current % > %
+#     left_join(tmp_train, by=c('Dept', 'Store', 'Wk')) % > %
+#     select(-Wk)
+#     return(test_pred)
+# }
+
+
+train = pd.read_csv('train_ini.csv', parse_dates=['Date'], index_col=[0])
+test = pd.read_csv('test.csv', parse_dates=['Date'], index_col=[0])
 
 # save weighed mean absolute error WMAE
 n_folds = 10
@@ -90,37 +82,16 @@ for t in range(1, n_folds+1):
     print(f'Fold{t}...')
 
     # *** THIS IS YOUR PREDICTION FUNCTION ***
-    train, test_pred = mypredict(train, test, next_fold, t-1)
+    train, test_pred = mypredict(train, test, next_fold, t)
 
     # Load fold file
     # You should add this to your training data in the next call to mypredict()
     fold_file = 'fold_{t}.csv'.format(t=t)
     next_fold = pd.read_csv(fold_file, parse_dates=['Date'], index_col=[0])
 
-    #yrs = pd.to_datetime(next_fold['Date']).dt.to_period('Y').unique().year
-    #for date in next_fold['Date'].unique():
-    #    wk = np.zeros(52)
-    #    yr = np.zeros(n_years)
-    #    wk_idx = (next_fold.loc[next_fold['Date'] == date]['Week']).unique()[0]
-    #    yr_idx = (next_fold.loc[next_fold['Date'] == date]['Year']).unique()[0]
-    #    wk[wk_idx] = 1
-    #    yr[yr_idx] = 1
-    #    idx = next_fold.loc[next_fold['Date'] == date].index
-    #    n = len(idx)
-    #    s_wk = pd.Series(data=n * [wk], index=idx)
-    #    s_yr = pd.Series(data=n * [yr], index=idx)
-    #    # it takes too long to write all the arrays to a file, so
-    #    # we'll just do that in memeory in the next step
-    #    next_fold.loc[next_fold['Date']==date,'Week'] = s_wk
-    #    next_fold.loc[next_fold['Date']==date,'Year'] = s_yr
-
     # extract predictions matching up to the current fold
     scoring_df = next_fold.merge(
-        test_pred, on=['Date', 'Store', 'Dept'], how='left', suffixes=("", "_dummy"))
-
-    scoring_df.drop_duplicates()
-
-    print(scoring_df)
+        test_pred, on=['Date', 'Store', 'Dept'], how='left')
 
     # extract weights and convert to numpy arrays for wae calculation
     weights = scoring_df['IsHoliday'].apply(
