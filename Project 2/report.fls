@@ -246,6 +246,14 @@ INPUT C:\Users\foile\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\sym
 INPUT C:\Users\foile\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm7.tfm
 INPUT C:\Users\foile\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmr12.tfm
 INPUT C:\Users\foile\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmbx12.tfm
+INPUT C:\Users\foile\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\cmextra\cmex7.tfm
+INPUT C:\Users\foile\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\cmextra\cmex7.tfm
+INPUT C:\Users\foile\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msam10.tfm
+INPUT C:\Users\foile\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msam7.tfm
+INPUT C:\Users\foile\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msam5.tfm
+INPUT C:\Users\foile\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
+INPUT C:\Users\foile\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm7.tfm
+INPUT C:\Users\foile\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm5.tfm
 OUTPUT report.pdf
 INPUT C:\Users\foile\AppData\Local\MiKTeX\fonts\map\pdftex\pdftex.map
 INPUT report.aux

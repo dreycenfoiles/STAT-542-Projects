@@ -1,12 +1,14 @@
 # Fdb version 3
-["pdflatex"] 1667844966 "c:/Users/foile/Documents/STAT-542-Projects/Project 2/report.tex" "report.pdf" "report" 1667844967
+["pdflatex"] 1667938446 "c:/Users/foile/Documents/STAT-542-Projects/Project 2/report.tex" "report.pdf" "report" 1667938449
   "C:/Users/foile/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1667441410 81107 70b8516c68c2e617189c5e44bfd16b96 ""
   "C:/Users/foile/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1667441405 10788010 09d51364c95e242e6e269880c6cfb171 ""
   "C:/Users/foile/AppData/Local/Programs/MiKTeX/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1233951848 1004 54797486969f23fa377b128694d548df ""
   "C:/Users/foile/AppData/Local/Programs/MiKTeX/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1233951848 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
   "C:/Users/foile/AppData/Local/Programs/MiKTeX/fonts/tfm/public/amsfonts/symbols/msam10.tfm" 1233951854 916 f87d7c45f9c908e672703b83b72241a3 ""
+  "C:/Users/foile/AppData/Local/Programs/MiKTeX/fonts/tfm/public/amsfonts/symbols/msam5.tfm" 1233951854 924 9904cf1d39e9767e7a3622f2a125a565 ""
   "C:/Users/foile/AppData/Local/Programs/MiKTeX/fonts/tfm/public/amsfonts/symbols/msam7.tfm" 1233951854 928 2dc8d444221b7a635bb58038579b861a ""
   "C:/Users/foile/AppData/Local/Programs/MiKTeX/fonts/tfm/public/amsfonts/symbols/msbm10.tfm" 1233951854 908 2921f8a10601f252058503cc6570e581 ""
+  "C:/Users/foile/AppData/Local/Programs/MiKTeX/fonts/tfm/public/amsfonts/symbols/msbm5.tfm" 1233951854 940 75ac932a52f80982a9f8ea75d03a34cf ""
   "C:/Users/foile/AppData/Local/Programs/MiKTeX/fonts/tfm/public/amsfonts/symbols/msbm7.tfm" 1233951854 940 228d6584342e91276bf566bcf9716b83 ""
   "C:/Users/foile/AppData/Local/Programs/MiKTeX/fonts/tfm/public/cm/cmbx12.tfm" 1136765053 1324 c910af8c371558dc20f2d7822f66fe64 ""
   "C:/Users/foile/AppData/Local/Programs/MiKTeX/fonts/tfm/public/cm/cmex10.tfm" 1136765053 992 662f679a0b3d2d53c1b94050fdaa3f50 ""
@@ -48,9 +50,9 @@
   "C:/Users/foile/AppData/Local/Programs/MiKTeX/tex/latex/l3kernel/expl3.sty" 1664385690 6107 fa5d25e84c05db068aed042b51a24d3b ""
   "C:/Users/foile/AppData/Local/Programs/MiKTeX/tex/latex/l3packages/xparse/xparse.sty" 1655909660 6812 d2f733947d73940b228845829d585700 ""
   "C:/Users/foile/AppData/Local/Programs/MiKTeX/tex/latex/physics/physics.sty" 1356002062 29610 a9597219b282d9c78b02393dcd7d4322 ""
-  "c:/Users/foile/Documents/STAT-542-Projects/Project 2/report.tex" 1667844965 906 bf327977c71359ca9b65514f99c072af ""
-  "report.aux" 1667844967 420 3780762cabca642e76ac1891ce4bf245 "pdflatex"
-  "report.tex" 1667844965 906 bf327977c71359ca9b65514f99c072af ""
+  "c:/Users/foile/Documents/STAT-542-Projects/Project 2/report.tex" 1667938445 2509 68be0be06de00b843d516527826332d1 ""
+  "report.aux" 1667938448 523 463575aeafcb6b0ae6d35600b05bc47d "pdflatex"
+  "report.tex" 1667938445 2509 68be0be06de00b843d516527826332d1 ""
   (generated)
   "report.aux"
   "report.log"

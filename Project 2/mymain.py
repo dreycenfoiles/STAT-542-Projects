@@ -8,13 +8,6 @@ def mypredict(train, test, next_fold, t):
         next_fold = next_fold
         train = pd.concat([train, next_fold])
 
-    def get_week(date): 
-        
-        if date.isocalendar().year == 2010:
-            return date.isocalendar().week - 1
-        else: 
-            return date.isocalendar().week
-
     start_date = pd.to_datetime("2011-03") + pd.DateOffset(months=2*(t-1))
     end_date = pd.to_datetime("2011-05") + pd.DateOffset(months=2*(t-1))
 

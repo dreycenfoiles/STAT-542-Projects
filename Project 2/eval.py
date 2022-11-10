@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from time import time 
 
 from mymain import mypredict
 
@@ -16,7 +17,9 @@ for t in range(1, n_folds+1):
     # print(f'Fold{t}...')
 
     # *** THIS IS YOUR PREDICTION FUNCTION ***
+    start = time() 
     train, test_pred = mypredict(train, test, next_fold, t)
+    print(time() - start)
 
     # Load fold file
     # You should add this to your training data in the next call to mypredict()
