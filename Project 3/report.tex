@@ -19,7 +19,16 @@ The project consisted of two main distinct parts. The first part where we extrac
 
 \subsection{Vocabulary Generation}
 
+To generate our vocabulary, we use the \verb,text2vec, R package to tokenize the words that are found in the \verb,alldata.tsv, file. To better separate the different words, we define a series of stop words. We can then further prune our vocabulary by removing all words from our vocab list that do not appear at least 10 times. Once our vocabulary list is pruned, we can turn it into a document term matrix (DTM). A DTM is a matrix where each row represents a document (in this case, a movie review) and each column represents a word. The value in each cell is the number of times that word appears in that document. We can then use this DTM to train our model.
+
+We then use the t-test method to trim our vocuabulary to 2K. We use this test to
+determine if the mean of the positive sentiment reviews in the document term
+matrix have the same mean as the mean of the negative sentiment reviews in the
+document term matrix. We choose the 2K words that have the highest t-statistic. We then use this trimmed vocabulary to create a new vectorizer and subsequently a new DTM. After constructing a new DTM, use \verb,GLMNET, to fit a logistic regression between the sentiment of a review and words in the DTM. After the fitting, if a word has a $\beta$ of less than 1000, we add it to our final vocabulary list. At the end of the vocab generation process, our vocabulary is 935 words long. 
+
 \subsection{Sentiment Prediction}
+
+To do the final sentiment prediction, we must first preprocess the reviews like how we did for the vocabulary generation. This involves separating by stop words, vectorizing and prune words that do not appear often enough. Once we have the pruned DTM, we can run it through LASSO regression using the model that we trained on the vocabulary generation. We then use the coefficients of the model to predict the sentiment of the review. We then compare the predicted sentiment to the actual sentiment and calculate the accuracy of the model.
 
 \section{Results}
 
@@ -54,6 +63,8 @@ Final vocabulary size: 935. Time to generate vocab 4 minutes 13 seconds. Some ex
 \end{center}
 
 \section{Conclusion}
+
+In this project, we used rudimentary natural language processing techniques to create a model that can predict the sentiment of a movie review. Using powerful preprocessing and simple LASSO regression, we are able to accurately predict the sentiment of a review with only a relatively small vocabulary. This is an important result beacuse it shows that complicated models like neural networks are not always necessary to achieve high accuracy on comlicated tasks like natural language processing. 
 
 
 \end{document}
