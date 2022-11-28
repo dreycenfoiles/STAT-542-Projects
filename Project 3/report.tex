@@ -11,11 +11,47 @@
 
 \section{Introduction}
 
-For this project, we are investigating how we can predict the sentiment of a movie review automatically by only using a relatively small vocabulary of words. This is an interesting project because it is our first attempt at natural language processing which is an incredibly important aspect of current machine learning focus. 
+For this project, we are investigating how we can predict the sentiment of a movie review automatically by only using a relatively small vocabulary of words. This is an interesting project because it is our first attempt at natural language processing which is an incredibly important aspect of current machine learning focus. To accomplish this task, we use some of the techniques recommended by Professor Feng. We were surprised to find that highly accurate sentiment prediction models can be created without using advanced techniques such as neural networks. We were able to get results that surpassed the benchmarks using only logistic regression. 
 
 \section{Methods}
 
+The project consisted of two main distinct parts. The first part where we extracted data from the \verb,alldata.tsv, file. The second part where we used the extracted data to train a model to predict the sentiment of a movie review. In the following two sections, we will discuss the methods we used to accomplish these tasks.
+
+\subsection{Vocabulary Generation}
+
+\subsection{Sentiment Prediction}
+
 \section{Results}
+
+All runs were performed on a custom desktop PC with an Intel i5-9400 2.9 GHz and 16 GB of RAM. 
+
+\subsection{Vocabulary Generation}
+
+Final vocabulary size: 935. Time to generate vocab 4 minutes 13 seconds. Some examples of words in our final vocab list include: 
+
+`actors', `adds', `adds\_to',`10\_10', `surprisingly\_good', `this\_bad',`waste',
+`wrong', and `would\_recommend'
+
+
+\subsection{Sentiment AUC on Splits}
+
+\begin{center}
+    \begin{tabular}{|c|c|c|}
+        \hline
+        Fold & Runtime (s.) & AUC \\ 
+        \hline \hline 
+        1 & 15.995 & 0.964 \\ 
+        \hline
+        2 & 15.392 & 0.964 \\ 
+        \hline
+        3 & 18.329 & 0.963 \\ 
+        \hline
+        4 & 15.387 & 0.964 \\ 
+        \hline
+        5 & 15.422 & 0.963 \\ 
+        \hline
+    \end{tabular}
+\end{center}
 
 \section{Conclusion}
 
